@@ -3,9 +3,14 @@ import java.util.*;
 public class CoffeeMakerQuestImpl implements CoffeeMakerQuest {
 
 	// TODO: Add more member variables and methods as needed.
-	
+	boolean over;
+	ArrayList<Room> roomstore;
+	int curroom;
 	CoffeeMakerQuestImpl() {
-		// TODO
+		// TODO'
+		roomstore=new ArrayList<Room>();
+		over=false;
+		curroom=0;
 	}
 
 	/**
@@ -15,7 +20,8 @@ public class CoffeeMakerQuestImpl implements CoffeeMakerQuest {
 	 */
 	public boolean isGameOver() {
 		// TODO
-		return false;
+		//return over;
+		return over;
 	}
 
 	/**
@@ -24,7 +30,7 @@ public class CoffeeMakerQuestImpl implements CoffeeMakerQuest {
 	 * @param p the player
 	 */
 	public void setPlayer(Player p) {
-		// TODO
+		this.setPlayer(p);
 	}
 	
 	/**
@@ -35,8 +41,11 @@ public class CoffeeMakerQuestImpl implements CoffeeMakerQuest {
 	 * @return true if successful, false otherwise
 	 */
 	public boolean addFirstRoom(Room room) {
-		// TODO
-		return false;
+		if (!this.addFirstRoom(room) || room == null) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	/**
@@ -56,7 +65,21 @@ public class CoffeeMakerQuestImpl implements CoffeeMakerQuest {
 	 */
 	public boolean addRoomAtNorth(Room room, String northDoor, String southDoor) {
 		// TODO
-		return false;
+		if (northDoor==null||southDoor==null||room==null) {
+			return false;
+		}
+		/*if (addFirstRoom(room)) {
+			return false;
+		}*/
+		for (Room r:roomstore) {
+			if (r.getAdjective().equals(room.getAdjective())||r.getFurnishing().equals(room.getFurnishing())) {
+				return false;
+			}
+		}
+		roomstore.get(roomstore.size()-1).setNorthDoor(northDoor);
+		room.setSouthDoor(southDoor);
+		roomstore.add(room);
+		return true;
 	}
 
 	/**
@@ -66,8 +89,8 @@ public class CoffeeMakerQuestImpl implements CoffeeMakerQuest {
 	 * @return room player is in, or null if not yet initialized
 	 */ 
 	public Room getCurrentRoom() {
-		// TODO
-		return null;
+		Room room = this.getCurrentRoom();
+		return room;
 	}
 	
 	/**
@@ -78,8 +101,12 @@ public class CoffeeMakerQuestImpl implements CoffeeMakerQuest {
 	 * @return true if successful, false otherwise
 	 */
 	public boolean setCurrentRoom(Room room) {
-		// TODO
-		return false;
+		if (getCurrentRoom() == null) {
+			return false;
+		} else {
+			this.setCurrentRoom(room);
+			return true;
+		}
 	}
 	
 	/**
@@ -89,8 +116,7 @@ public class CoffeeMakerQuestImpl implements CoffeeMakerQuest {
 	 * @return comamnd prompt string
 	 */
 	public String getInstructionsString() {
-		// TODO
-		return "";
+		return " INSTRUCTIONS (N,S,L,I,D,H) > ";
 	}
 	
 	/**
@@ -108,7 +134,130 @@ public class CoffeeMakerQuestImpl implements CoffeeMakerQuest {
 	 * @return response string for the command
 	 */
 	public String processCommand(String cmd) {
-		// TODO
+		Player player = new Player();
+		Room room = getCurrentRoom();
+		switch (cmd){ 
+			case "n": 
+				if (curroom==6) {
+					return "A door in that direction does not exist.";
+				}
+				
+			case "N":
+				if (curroom==6) {
+					return 	"A door in that direction does not exist.";
+				}
+				curroom++;
+				return "";
+			case "s":
+				if (curroom==6) {
+					return 	"A door in that direction does not exist.";
+				}
+				curroom--;
+				return "";
+			case "S":
+				if (curroom==6) {
+					return 	"A door in that direction does not exist.";
+				}
+				curroom--;
+				return "";
+			case "l":
+				return (room.getItem() + room.getDescription());
+
+			case "L":
+				return (room.getItem() + room.getDescription());
+
+			case "i":
+				return player.getInventoryString();
+
+			case "I":
+				return player.getInventoryString();
+
+			case "d":
+				player.getInventoryString();
+				if (player.checkCoffee()&&player.checkCream()&&player.checkSugar()) {
+					return "You drink the beverage and are ready to study!\r\n" + 
+							"You win!";
+				}
+				else if (player.checkCoffee() && player.checkCream()) {
+					return"Without sugar, the coffee is too bitter. You cannot study.\r\n" + 
+							"You lose!";
+				}
+				else if(player.checkCoffee()&&player.checkSugar()){
+					 return"Without cream, you get an ulcer and cannot study.\r\n" + 
+					 		"You lose!";
+				}
+				else if (player.checkCream()&&player.checkSugar()) {
+					return "You drink the sweetened cream, but without caffeine you cannot study.\r\n" + 
+							"You lose!";
+				}
+				else if (player.checkCoffee()) {
+					return "Without cream, you get an ulcer and cannot study.\r\n" + 
+							"You lose!";
+				}
+				else if (player.checkCream()) {
+					return "You drink the cream, but without caffeine, you cannot study.\r\n" + 
+							"You lose!";
+				}
+				else if (player.checkSugar()) {
+					return "You eat the sugar, but without caffeine, you cannot study.\r\n" + 
+							"You lose!";
+				}
+				else {
+					return"You drink the air, as you have no coffee, sugar, or cream.\r\n" + 
+							"The air is invigorating, but not invigorating enough. You cannot study.\r\n" + 
+							"You lose!";
+				}
+			case "D":
+				player.getInventoryString();
+				if (player.checkCoffee()&&player.checkCream()&&player.checkSugar()) {
+					return "You drink the beverage and are ready to study!\r\n" + 
+							"You win!";
+				}
+				else if (player.checkCoffee() && player.checkCream()) {
+					return"Without sugar, the coffee is too bitter. You cannot study.\r\n" + 
+							"You lose!";
+				}
+				else if(player.checkCoffee()&&player.checkSugar()){
+					 return"Without cream, you get an ulcer and cannot study.\r\n" + 
+					 		"You lose!";
+				}
+				else if (player.checkCream()&&player.checkSugar()) {
+					return "You drink the sweetened cream, but without caffeine you cannot study.\r\n" + 
+							"You lose!";
+				}
+				else if (player.checkCoffee()) {
+					return "Without cream, you get an ulcer and cannot study.\r\n" + 
+							"You lose!";
+				}
+				else if (player.checkCream()) {
+					return "You drink the cream, but without caffeine, you cannot study.\r\n" + 
+							"You lose!";
+				}
+				else if (player.checkSugar()) {
+					return "You eat the sugar, but without caffeine, you cannot study.\r\n" + 
+							"You lose!";
+				}
+				else {
+					return"You drink the air, as you have no coffee, sugar, or cream.\r\n" + 
+							"The air is invigorating, but not invigorating enough. You cannot study.\r\n" + 
+							"You lose!";
+				}
+			
+			case "h":
+				return "N - Go north"+
+				"\nS - Go south"+
+				"\nL - Look and collect any items in the room"+
+				"\nI - Show inventory of items collected"+
+				"\nD - Drink coffee made from items in inventory\n";
+
+			case "H":
+				return "N - Go north"+
+				"\nS - Go south"+
+				"\nL - Look and collect any items in the room"+
+				"\nI - Show inventory of items collected"+
+				"\nD - Drink coffee made from items in inventory\n";
+
+		}
 		return "";
 	}
 	
