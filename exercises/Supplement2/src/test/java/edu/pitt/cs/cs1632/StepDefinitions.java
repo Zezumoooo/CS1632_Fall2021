@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 public class StepDefinitions {
 	private RentACat r;
 	private String listResult;
-	
+	private boolean judged;
 	// TODO: Add more member variables and methods as necessary
 
 	@Given("a rent-a-cat facility")
@@ -35,8 +35,7 @@ public class StepDefinitions {
 	
 	@When("I rent cat number {int}")
 	public void iRentCatNumber(Integer id) {
-		// TODO: Implement
-		fail();
+		judged=r.rentCat(id);
 	}
 	
 	@Then("the listing is: {string}")
@@ -46,13 +45,20 @@ public class StepDefinitions {
 	
 	@Then("the rent is successful")
 	public void theRentIsSuccessful() {
-		// TODO: Implement
-		fail();
+		assertFalse(judged);
 	}
 
 	@Then("the rent is unsuccessful")
 	public void theRentIsUnsuccessful() {
-		// TODO: Implement
-		fail();
+		assertTrue(judged);
+	}
+	public void iReturnCatNumber(Integer id) {
+		judged=r.returnCat(id);
+	}
+	public void theReturnIsSuccessful() {	
+		assertTrue(judged);
+	}
+	public void theReturnIsUnsuccessful() {
+		assertFalse(judged);
 	}
 }
